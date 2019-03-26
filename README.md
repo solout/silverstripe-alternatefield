@@ -9,9 +9,10 @@ Based heavily on https://github.com/Leapfrognz/alternative-field with some restr
 Add the dropdown options to the _config/AlternateFormField.yml file.
 
 ```yml
-AlternativeFormField:
+AlternateFormField:
   empty_string: '-- Select --'
   alternative_field_title: 'Please state:'
+
 ```
 
 ## Requirements
