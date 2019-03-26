@@ -1,0 +1,3 @@
+AlternativeFormField:
+  empty_string: '-- Select --'
+  alternative_field_title: 'Please state:'

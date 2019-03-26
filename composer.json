@@ -1,0 +1,22 @@
+{
+    "name": "solout/alternate-field",
+    "description": "Simple dropdown field which displays a text field when 'Other' is selected.",
+    "type": "silverstripe-module",
+    "keywords": ["silverstripe", "alternate", "dropdown", "optionset", "other", "field", "forms", "cms"],
+	"license": "BSD-3-Clause",
+    "authors": [
+    {
+        "name": "Rowen Atkinson",
+        "email": "rowen@solutionsoutsourced.com.au"
+    }
+    ],
+    "require":
+    {
+        "silverstripe/framework": "3.*",
+	    "silverstripe/cms": "3.*"
+    },
+    "extra": {
+    	"installer-name": "so_alternatefield"
+    }
+
+}
