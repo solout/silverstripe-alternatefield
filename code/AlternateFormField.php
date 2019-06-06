@@ -26,7 +26,7 @@ class AlternateFormField extends FormField {
         if($this->getEmptyString()) {
             $this->fieldSelectedValue->setEmptyString($this->getEmptyString());
         }
-        $this->fieldAlternativeValue = new TextField("{$name}[AlternativeValue]", $this->getAlternativeFieldTitle(), '', 30, $form);
+        $this->fieldAlternativeValue = new TextField("{$name}[AlternativeValue]", $this->getAlternativeFieldTitle(), '', 255, $form);
         $this->fieldSelectedValue->setForm($form);
         $this->fieldAlternativeValue->setForm($form);
 
