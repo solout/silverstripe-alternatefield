@@ -17,7 +17,7 @@
             "css",
             "js"
         ]
-    }
+    },
     "autoload": {
         "psr-4": {
             "SolutionsOutsourced\\Fields\\": "src/"
