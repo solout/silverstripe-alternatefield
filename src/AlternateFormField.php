@@ -76,7 +76,7 @@ class AlternateFormField extends FormField {
         return parent::setName($name);
     }
 
-    function setValue($val) {
+    function setValue($val, $data = null) {
         $this->value = $val;
         if(is_array($val)) {
             $this->fieldSelectedValue->setValue($val['SelectedValue']);
@@ -108,7 +108,7 @@ class AlternateFormField extends FormField {
      * SaveInto checks if set-methods are available and use them instead of setting the values directly. saveInto
      * initiates a new LinkField class object to pass through the values to the setter method.
      */
-    function saveInto(DataObjectInterface $dataObject) {
+    function saveInto(\SilverStripe\ORM\DataObjectInterface $dataObject) {
 
         $fieldName = $this->name;
         if($dataObject->hasMethod("set$fieldName")) {

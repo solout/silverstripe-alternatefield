@@ -23,7 +23,7 @@ class AlternateField extends DBComposite
      */
     protected $isChanged = false;
 
-    static $composite_db = array(
+    private static $composite_db = array(
         'SelectedValue'    => 'Varchar(255)',
         'AlternativeValue' => 'Varchar(255)',
     );
@@ -156,7 +156,7 @@ class AlternateField extends DBComposite
         $this->alternativeValue = $alternativeValue;
     }
 
-    public function scaffoldFormField($title = null)
+    public function scaffoldFormField($title = null, $params = null)
     {
         $field = new AlternateFormField($this->name);
         return $field;
