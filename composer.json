@@ -1,7 +1,7 @@
 {
     "name": "solout/silverstripe-alternate-field",
     "description": "Simple dropdown field which displays a text field when 'Other' is selected.",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "keywords": ["silverstripe", "alternate", "dropdown", "optionset", "other", "field", "forms", "cms"],
 	"license": "BSD-3-Clause",
     "authors": [
