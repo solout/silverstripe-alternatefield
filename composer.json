@@ -5,16 +5,23 @@
     "keywords": ["silverstripe", "alternate", "dropdown", "optionset", "other", "field", "forms", "cms"],
 	"license": "BSD-3-Clause",
     "authors": [
-    {
-        "name": "Rowen Atkinson",
-        "email": "rowen@solutionsoutsourced.com.au"
-    }
+        {"name": "Rowen Atkinson", "email": "rowen@solutionsoutsourced.com.au", "role": "Developer"}
     ],
-    "require":
-    {
+    "require": {
+        "silverstripe/framework": "^4",
+        "silverstripe/cms": "^4"
     },
     "extra": {
-    	"installer-name": "alternatefield"
+    	"installer-name": "alternatefield",
+        "expose": [
+            "css",
+            "js"
+        ]
     }
+    "autoload": {
+        "psr-4": {
+            "SolutionsOutsourced\\Fields\\": "src/"
+        }
+    },
 
 }

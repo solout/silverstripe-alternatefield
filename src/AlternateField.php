@@ -1,4 +1,5 @@
 <?php
+namespace SolutionsOutsourced\Fields
 
 class AlternateField extends DBField implements CompositeDBField
 {
