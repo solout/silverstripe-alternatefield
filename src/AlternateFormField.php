@@ -1,5 +1,12 @@
 <?php
-namespace SolutionsOutsourced\Fields
+namespace SolutionsOutsourced\Fields;
+
+use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\Requirements;
 
 class AlternateFormField extends FormField {
 

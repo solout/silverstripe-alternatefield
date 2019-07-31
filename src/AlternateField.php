@@ -1,7 +1,11 @@
 <?php
-namespace SolutionsOutsourced\Fields
+namespace SolutionsOutsourced\Fields;
 
-class AlternateField extends DBField implements CompositeDBField
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBComposite;
+use SilverStripe\ORM\FieldType\DBField;
+
+class AlternateField extends DBComposite
 {
 
     /**
@@ -29,6 +33,7 @@ class AlternateField extends DBField implements CompositeDBField
 
         if ($value instanceof AlternateField && $value->exists())
         {
+
             $this->setSelectedValue($value->getSelectedValue(), $markChanged);
             $this->setAlternativeValue($value->getAlternativeValue(), $markChanged);
             if ($markChanged)
