@@ -1,12 +1,16 @@
 <?php
 namespace SolutionsOutsourced\Fields;
 
+use SolutionsOutsourced\Fields\AlternateField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\Requirements;
+use SilverStripe\ORM\DataObjectInterface;
+
 
 class AlternateFormField extends FormField {
 
@@ -16,11 +20,11 @@ class AlternateFormField extends FormField {
 
     private static $empty_string = '-- Select --';
 
-    private static $alternative_field_title = 'Please state:';
+    private static $alternate_field_title = 'Please state:';
 
     protected $fieldSelectedValue = null;
 
-    protected $fieldAlternativeValue = null;
+    protected $fieldAlternateValue = null;
 
     function __construct($name, $title = null, $options = [], $type = 'DropdownField', $value = null, $form = null) {
         if ($type === 'OptionsetField') {
@@ -34,14 +38,14 @@ class AlternateFormField extends FormField {
         if($this->getEmptyString()) {
             $this->fieldSelectedValue->setEmptyString($this->getEmptyString());
         }
-        $this->fieldAlternativeValue = new TextField("{$name}[AlternativeValue]", $this->getAlternativeFieldTitle(), '', 255, $form);
+        $this->fieldAlternateValue = new TextField("{$name}[AlternateValue]", $this->getAlternateFieldTitle(), '', 255, $form);
         $this->fieldSelectedValue->setForm($form);
-        $this->fieldAlternativeValue->setForm($form);
+        $this->fieldAlternateValue->setForm($form);
 
-        $this->fieldSelectedValue->setAttribute('data-for', $this->fieldAlternativeValue->ID());
-        $this->fieldAlternativeValue->setAttribute('data-fieldid', $this->fieldAlternativeValue->ID());
+        $this->fieldSelectedValue->setAttribute('data-for', $this->fieldAlternateValue->ID());
+        $this->fieldAlternateValue->setAttribute('data-fieldid', $this->fieldAlternateValue->ID());
         $this->fieldSelectedValue->addExtraClass('selected-field');
-        $this->fieldAlternativeValue->addExtraClass('alternate-field');
+        $this->fieldAlternateValue->addExtraClass('alternate-field');
 
         parent::__construct($name, $title, $value, $form);
     }
@@ -60,19 +64,19 @@ class AlternateFormField extends FormField {
         return $this->config()->get('empty_string');
     }
 
-    public function getAlternativeFieldTitle() {
-        return $this->config()->get('alternative_field_title');
+    public function getAlternateFieldTitle() {
+        return $this->config()->get('alternate_field_title');
     }
 
     function setForm($form) {
         $this->fieldSelectedValue->setForm($form);
-        $this->fieldAlternativeValue->setForm($form);
+        $this->fieldAlternateValue->setForm($form);
         return parent::setForm($form);
     }
 
     function setName($name){
         $this->fieldSelectedValue->setName("{$name}[SelectedValue]");
-        $this->fieldAlternativeValue->setName("{$name}[AlternativeValue]");
+        $this->fieldAlternateValue->setName("{$name}[AlternateValue]");
         return parent::setName($name);
     }
 
@@ -80,10 +84,10 @@ class AlternateFormField extends FormField {
         $this->value = $val;
         if(is_array($val)) {
             $this->fieldSelectedValue->setValue($val['SelectedValue']);
-            $this->fieldAlternativeValue->setValue($val['AlternativeValue']);
-        } elseif($val instanceof AlternateField) {
+            $this->fieldAlternateValue->setValue($val['AlternateValue']);
+        } elseif($val instanceof AlternateField ) {
             $this->fieldSelectedValue->setValue($val->getSelectedValue());
-            $this->fieldAlternativeValue->setValue($val->getAlternativeValue());
+            $this->fieldAlternateValue->setValue($val->getAlternateValue());
         }
     }
 
@@ -91,14 +95,15 @@ class AlternateFormField extends FormField {
      * @return string
      */
     function Field($properties = array()) {
-        Requirements::javascript(self::$module_dir . '/js/AlternativeFormField.js');
-        Requirements::css(self::$module_dir . '/css/AlternativeFormField.css');
-        return "<div class=\"fieldgroup AlternativeFormField \">" .
-            "<div class=\"fieldgroupField AlternativeFormFieldSelectedValue\">" .
+
+        Requirements::javascript('solout/silverstripe-alternate-field:js/AlternateFormField.js');
+        Requirements::css('solout/silverstripe-alternate-field:css/AlternateFormField.css');
+        return "<div class=\"fieldgroup AlternateFormField \">" .
+            "<div class=\"fieldgroupField AlternateFormFieldSelectedValue\">" .
             $this->fieldSelectedValue->SmallFieldHolder() .
             "</div>" .
-            "<div class=\"fieldgroupField AlternativeFormFieldAlternativeValue\">" .
-            $this->fieldAlternativeValue->SmallFieldHolder() .
+            "<div class=\"fieldgroupField AlternateFormFieldAlternateValue\">" .
+            $this->fieldAlternateValue->SmallFieldHolder() .
             "</div>" .
             "</div>";
     }
@@ -108,17 +113,17 @@ class AlternateFormField extends FormField {
      * SaveInto checks if set-methods are available and use them instead of setting the values directly. saveInto
      * initiates a new LinkField class object to pass through the values to the setter method.
      */
-    function saveInto(\SilverStripe\ORM\DataObjectInterface $dataObject) {
+    function saveInto(DataObjectInterface $dataObject) {
 
         $fieldName = $this->name;
         if($dataObject->hasMethod("set$fieldName")) {
             $dataObject->$fieldName = DBField::create('AlternateField', array(
                 "SelectedValue" => $this->fieldSelectedValue->Value(),
-                "AlternativeValue" => $this->fieldAlternativeValue->Value()
+                "AlternateValue" => $this->fieldAlternateValue->Value()
             ));
         } else {
             $dataObject->$fieldName->setSelectedValue($this->fieldSelectedValue->Value());
-            $dataObject->$fieldName->setAlternativeValue($this->fieldAlternativeValue->Value());
+            $dataObject->$fieldName->setAlternateValue($this->fieldAlternateValue->Value());
         }
     }
 
