@@ -1,5 +1,5 @@
-if (!so) {
-    so = {};
+if (typeof (so) === 'undefined') {
+    var so = {};
 }
 
 so.alternatefield = {
