@@ -1,20 +1,20 @@
 <?php
 namespace SolutionsOutsourced\Fields;
 
-use SolutionsOutsourced\Fields\AlternateField;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\Requirements;
-use SilverStripe\ORM\DataObjectInterface;
+use SolutionsOutsourced\Fields\AlternateField;
 
+class AlternateFormField extends FormField
+{
 
-class AlternateFormField extends FormField {
-
-    static $module_dir = '';  // This is initially set in _config.php
+    static $module_dir = ''; // This is initially set in _config.php
 
     private static $options = array();
 
@@ -26,18 +26,25 @@ class AlternateFormField extends FormField {
 
     protected $fieldAlternateValue = null;
 
-    function __construct($name, $title = null, $options = [], $type = 'DropdownField', $value = null, $form = null) {
-        if ($type === 'OptionsetField') {
+    public function __construct($name, $title = null, $options = [], $type = 'DropdownField', $value = null, $form = null)
+    {
+        if ($type === 'OptionsetField')
+        {
             $this->fieldSelectedValue = OptionsetField::create("{$name}[SelectedValue]", '', $options, '', $form);
-        } else if ($type === 'CheckboxsetField') {
+        }
+        else if ($type === 'CheckboxsetField')
+        {
             $this->fieldSelectedValue = CheckboxSetField::create("{$name}[SelectedValue]", '', $options, '', $form);
-        } else {
+        }
+        else
+        {
             $this->fieldSelectedValue = DropdownField::create("{$name}[SelectedValue]", '', $options, '', $form);
+            if ($this->getEmptyString())
+            {
+                $this->fieldSelectedValue->setEmptyString($this->getEmptyString());
+            }
         }
 
-        if($this->getEmptyString()) {
-            $this->fieldSelectedValue->setEmptyString($this->getEmptyString());
-        }
         $this->fieldAlternateValue = new TextField("{$name}[AlternateValue]", $this->getAlternateFieldTitle(), '', 255, $form);
         $this->fieldSelectedValue->setForm($form);
         $this->fieldAlternateValue->setForm($form);
@@ -55,37 +62,46 @@ class AlternateFormField extends FormField {
         return $this->fieldSelectedValue->setOptions($options);
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         $options = $this->config()->get('options');
         return array_combine($options, $options);
     }
 
-    public function getEmptyString() {
+    public function getEmptyString()
+    {
         return $this->config()->get('empty_string');
     }
 
-    public function getAlternateFieldTitle() {
+    public function getAlternateFieldTitle()
+    {
         return $this->config()->get('alternate_field_title');
     }
 
-    function setForm($form) {
+    public function setForm($form)
+    {
         $this->fieldSelectedValue->setForm($form);
         $this->fieldAlternateValue->setForm($form);
         return parent::setForm($form);
     }
 
-    function setName($name){
+    public function setName($name)
+    {
         $this->fieldSelectedValue->setName("{$name}[SelectedValue]");
         $this->fieldAlternateValue->setName("{$name}[AlternateValue]");
         return parent::setName($name);
     }
 
-    function setValue($val, $data = null) {
+    public function setValue($val, $data = null)
+    {
         $this->value = $val;
-        if(is_array($val)) {
+        if (is_array($val))
+        {
             $this->fieldSelectedValue->setValue($val['SelectedValue']);
             $this->fieldAlternateValue->setValue($val['AlternateValue']);
-        } elseif($val instanceof AlternateField ) {
+        }
+        elseif ($val instanceof AlternateField)
+        {
             $this->fieldSelectedValue->setValue($val->getSelectedValue());
             $this->fieldAlternateValue->setValue($val->getAlternateValue());
         }
@@ -94,39 +110,41 @@ class AlternateFormField extends FormField {
     /**
      * @return string
      */
-    function Field($properties = array()) {
+    public function Field($properties = array())
+    {
 
         Requirements::javascript('solout/silverstripe-alternate-field:js/AlternateFormField.js');
         Requirements::css('solout/silverstripe-alternate-field:css/AlternateFormField.css');
         return "<div class=\"fieldgroup AlternateFormField \">" .
-            "<div class=\"fieldgroupField AlternateFormFieldSelectedValue\">" .
-            $this->fieldSelectedValue->SmallFieldHolder() .
-            "</div>" .
-            "<div class=\"fieldgroupField AlternateFormFieldAlternateValue\">" .
-            $this->fieldAlternateValue->SmallFieldHolder() .
+        "<div class=\"fieldgroupField AlternateFormFieldSelectedValue\">" .
+        $this->fieldSelectedValue->SmallFieldHolder() .
+        "</div>" .
+        "<div class=\"fieldgroupField AlternateFormFieldAlternateValue\">" .
+        $this->fieldAlternateValue->SmallFieldHolder() .
             "</div>" .
             "</div>";
     }
-
 
     /**
      * SaveInto checks if set-methods are available and use them instead of setting the values directly. saveInto
      * initiates a new LinkField class object to pass through the values to the setter method.
      */
-    function saveInto(DataObjectInterface $dataObject) {
+    public function saveInto(DataObjectInterface $dataObject)
+    {
 
         $fieldName = $this->name;
-        if($dataObject->hasMethod("set$fieldName")) {
+        if ($dataObject->hasMethod("set$fieldName"))
+        {
             $dataObject->$fieldName = DBField::create('AlternateField', array(
-                "SelectedValue" => $this->fieldSelectedValue->Value(),
-                "AlternateValue" => $this->fieldAlternateValue->Value()
+                "SelectedValue"  => $this->fieldSelectedValue->Value(),
+                "AlternateValue" => $this->fieldAlternateValue->Value(),
             ));
-        } else {
+        }
+        else
+        {
             $dataObject->$fieldName->setSelectedValue($this->fieldSelectedValue->Value());
             $dataObject->$fieldName->setAlternateValue($this->fieldAlternateValue->Value());
         }
     }
-
-
 
 }
